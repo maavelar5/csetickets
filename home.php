@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-    <?php require('db.php'); ?>
-    <?php require('head.php'); ?>
+    <?php 
+    require('db.php');
 
-    <?php
     $user_data = NULL;
 
     if (isset($_COOKIE['user_data'])) {
@@ -21,11 +20,14 @@
         $report_query = "insert into reporte (usuario_id, tipo, comentarios, status) values ($user_id, '$tipo', '$comentarios', 'creado')";
 
         connect();
-        mysqli_query ($conn, $report_query);        
-        disconnect();
+        if(mysqli_query ($conn, $report_query)) {
+            $success = true;            
+        }
 
-        $success = true;
+        disconnect();
     }
+
+    require('head.php');
     ?>
 
     <body>
@@ -63,10 +65,10 @@
                         Impresora
                     </div>
                     <div class="col-lg-2 card"
-                         data-id="inmobiliario"
+                         data-id="mobiliario"
                          data-toggle="modal"
                          data-target="#exampleModal">
-                        Inmobiliario
+                        Mobiliario
                     </div>
                     <div class="col-lg-2 card"
                          data-id="consumibles"
@@ -110,7 +112,8 @@
                         <div class="modal-body">
                             <textarea name="comentarios"
                                       class="form-control"
-                                      rows="5" id="comment">
+                                      rows="5"
+                                      id="comment">
                             </textarea>
                         </div>
                         <div class="modal-footer">

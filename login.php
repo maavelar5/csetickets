@@ -2,6 +2,7 @@
 <html>
     <?php
     require('db.php');
+
     if ($_POST['usuario'] && $_POST['secreto']) {
         extract($_POST);
         
@@ -19,9 +20,10 @@
             }
         }
     }
+
+    require('head.php');
     ?>
 
-    <?php require('head.php'); ?>
     <body>
         <div class="container">
             <div class="col-md-12">
