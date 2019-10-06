@@ -1,8 +1,6 @@
 <?php
 require('db.php');
 
-var_dump($_POST);
-
 extract($_POST);
 
 $cancelar_query = "update reporte set status='cancelado' where id='$id'";

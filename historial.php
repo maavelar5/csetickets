@@ -1,36 +1,36 @@
-<!DOCTYPE html>
-<html>
-    <?php require('db.php'); ?>
-    <?php require('head.php'); ?>
+<?php
+require('db.php');
 
-    <?php 
-    $user_data = NULL;
+$user_data = NULL;
 
-    if (isset($_COOKIE['user_data'])) {
-        $user_data = unserialize($_COOKIE['user_data']);
-    }
+if (isset($_COOKIE['user_data'])) {
+    $user_data = unserialize($_COOKIE['user_data']);
+}
 
-    if (!$user_data) {
-        header('Location: /');
-        exit;
+if (!$user_data) {
+    header('Location: /');
+    exit;
+}
+else {
+    $user_id = $user_data['id'];
+
+    connect();
+    if ($user_data['usuario'] == 'admin') {
+        $query = "select * from reporte inner join usuario on usuario_id = usuario.id order by field(status,'creado','progreso','terminado','cancelado')";
     }
     else {
-        $user_id = $user_data['id'];
-
-        connect();
-        if ($user_data['usuario'] == 'admin') {
-            $query = "select * from reporte inner join usuario on usuario_id = usuario.id order by field(status,'creado','progreso','terminado','cancelado')";
-        }
-        else {
-            $query = "select * from reporte where usuario_id='$user_id' order by field(status,'creado','progreso','terminado','cancelado')";
-        }
-
-        $result = mysqli_query($conn,$query);
-        $rows = mysqli_fetch_all($result);
-        disconnect();
+        $query = "select * from reporte where usuario_id='$user_id' order by field(status,'creado','progreso','terminado','cancelado')";
     }
 
-    ?>
+    $result = mysqli_query($conn,$query);
+    $rows = mysqli_fetch_all($result);
+    disconnect();
+}
+?>
+
+<!DOCTYPE html>
+<html>
+    <?php require('head.php'); ?>
     <body>
         <div class="container">
             <?php require('navbar.php'); ?>
@@ -75,7 +75,7 @@
                                         }
                                         ?>
                                     </td>
-                                    <td style="text-align: justify; width: 50%;">
+                                    <td style="text-align: left; width: 50%;">
                                         <?php echo $row[3]; ?>
                                     </td>
                                     <?php if ($user_data["usuario"] == "admin") { ?>
@@ -131,5 +131,4 @@
         </div>
         <?php require('foot.php'); ?>
     </body>
-
 </html>

@@ -1,28 +1,30 @@
-<!DOCTYPE html>
-<html>
-    <?php
-    require('db.php');
+<?php
+require('db.php');
 
-    if ($_POST['usuario'] && $_POST['secreto']) {
-        extract($_POST);
-        
-        if ($secreto == 'csetickets') {
-            connect();
+if (isset($_POST['usuario']) && isset($_POST['secreto'])) {
+    extract($_POST);
+    
+    if ($secreto == $config['secret']) {
+        connect();
 
-            $result = mysqli_query ($conn , "SELECT * FROM usuario WHERE usuario='$usuario'");
-            $user_data = mysqli_fetch_array($result);
+        $result = mysqli_query ($conn , "SELECT * FROM usuario WHERE usuario='$usuario'");
+        $user_data = mysqli_fetch_array($result);
 
-            disconnect();
+        disconnect();
 
-            if ($user_data) {
-                setcookie('user_data',serialize($user_data), time() + (86400 * 365),'/');
-                header('Location: home.php');
-            }
+        if ($user_data) {
+            setcookie('user_data',serialize($user_data), time() + (86400 * 365),'/');
+            header('Location: home.php');
+            exit;
         }
     }
+}
+?>
 
-    require('head.php');
-    ?>
+<!DOCTYPE html>
+<html>
+
+<?php require('head.php'); ?>
 
     <body>
         <div class="container">

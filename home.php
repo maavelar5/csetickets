@@ -1,41 +1,41 @@
+<?php 
+require('db.php');
+
+$user_data = NULL;
+
+if (isset($_COOKIE['user_data'])) {
+    $user_data = unserialize($_COOKIE['user_data']);
+}
+
+if (!$user_data) {
+    header('Location: /');
+    exit;
+}
+else if (isset($_POST['tipo'])) {
+    extract($_POST);
+
+    $user_id = $user_data['id'];
+    $report_query = "insert into reporte (usuario_id, tipo, comentarios, status) values ($user_id, '$tipo', '$comentarios', 'creado')";
+
+    connect();
+    if(mysqli_query ($conn, $report_query)) {
+        $success = true;            
+    }
+
+    disconnect();
+}
+?>
+
 <!DOCTYPE html>
 <html>
-    <?php 
-    require('db.php');
-
-    $user_data = NULL;
-
-    if (isset($_COOKIE['user_data'])) {
-        $user_data = unserialize($_COOKIE['user_data']);
-    }
-
-    if (!$user_data) {
-        header('Location: /');
-        exit;
-    }
-    else if ($_POST['tipo']) {
-        extract($_POST);
-
-        $user_id = $user_data['id'];
-        $report_query = "insert into reporte (usuario_id, tipo, comentarios, status) values ($user_id, '$tipo', '$comentarios', 'creado')";
-
-        connect();
-        if(mysqli_query ($conn, $report_query)) {
-            $success = true;            
-        }
-
-        disconnect();
-    }
-
-    require('head.php');
-    ?>
+    <?php require('head.php'); ?>
 
     <body>
         <div class="container">
             <?php require('navbar.php'); ?>
             <div class="col-md-12">
                 <div class="row justify-content-center align-items-center">
-                    <?php if ($success) { ?>
+                    <?php if (isset($success)) { ?>
                         <div id="success-alert"
                              class="alert alert-success alert-dismissible fade show"
                              role="alert">
@@ -64,12 +64,12 @@
                          data-target="#exampleModal">
                         Impresora
                     </div>
-                    <div class="col-lg-2 card"
+                    <!-- <div class="col-lg-2 card"
                          data-id="mobiliario"
                          data-toggle="modal"
                          data-target="#exampleModal">
-                        Mobiliario
-                    </div>
+                         Mobiliario
+                         </div> -->
                     <div class="col-lg-2 card"
                          data-id="consumibles"
                          data-toggle="modal"
@@ -112,7 +112,7 @@
                         <div class="modal-body">
                             <textarea name="comentarios"
                                       class="form-control"
-                                      rows="5"
+                                      rows="2"
                                       id="comment">
                             </textarea>
                         </div>
